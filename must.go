@@ -35,6 +35,16 @@ func Create(name string) *os.File {
 	return f
 }
 
+type Encoder interface {
+	Encode(v interface{}) error
+}
+
+// json.Encoder.Encode, gob.Encoder.Encode, xml.Encoder.Encode
+func Encode(e Encoder, v interface{}) {
+	err := e.Encode(v)
+	AbortIf(err)
+}
+
 // os.Open
 func Open(name string) *os.File {
 	f, err := os.Open(name)
