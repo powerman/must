@@ -22,8 +22,8 @@ func Atoi(buf []byte) int {
 	return i
 }
 
-// os.File.Close
-func Close(f *os.File) {
+// os.File.Close, …
+func Close(f io.Closer) {
 	err := f.Close()
 	AbortIf(err)
 }
@@ -39,7 +39,7 @@ type Encoder interface {
 	Encode(v interface{}) error
 }
 
-// json.Encoder.Encode, gob.Encoder.Encode, xml.Encoder.Encode
+// json.Encoder.Encode, gob.Encoder.Encode, xml.Encoder.Encode, …
 func Encode(e Encoder, v interface{}) {
 	err := e.Encode(v)
 	AbortIf(err)
@@ -59,7 +59,7 @@ func OpenFile(name string, flag int, perm os.FileMode) *os.File {
 	return f
 }
 
-// io.Reader.Read
+// os.File.Read, bufio.Reader.Read, net.Conn.Read, rand.Read, …
 func Read(r io.Reader, buf []byte) (n int) {
 	n, err := r.Read(buf)
 	AbortIf(err)
@@ -74,9 +74,10 @@ func ReadAll(f *os.File) []byte {
 }
 
 // io.ReadFull
-func ReadFull(f *os.File, buf []byte) {
-	_, err := io.ReadFull(f, buf)
+func ReadFull(f *os.File, buf []byte) int {
+	n, err := io.ReadFull(f, buf)
 	AbortIf(err)
+	return n
 }
 
 // ioutil.ReadFile
@@ -124,16 +125,24 @@ func Truncate(f *os.File, size int64) {
 	AbortIf(err)
 }
 
-// os.File.Write
-func Write(f *os.File, b []byte) {
-	_, err := f.Write(b)
+// os.Truncate
+func TruncatePath(name string, size int64) {
+	err := os.Truncate(name, size)
 	AbortIf(err)
 }
 
-// os.File.WriteAt
-func WriteAt(f *os.File, b []byte, off int64) {
-	_, err := f.WriteAt(b, off)
+// os.File.Write, bufio.Writer.Write, net.Conn.Write, …
+func Write(f io.Writer, b []byte) int {
+	n, err := f.Write(b)
 	AbortIf(err)
+	return n
+}
+
+// os.File.WriteAt
+func WriteAt(f io.WriterAt, b []byte, off int64) int {
+	n, err := f.WriteAt(b, off)
+	AbortIf(err)
+	return n
 }
 
 // ioutil.WriteFile
