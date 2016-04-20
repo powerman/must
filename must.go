@@ -83,6 +83,13 @@ func ReadAll(f *os.File) []byte {
 	return buf
 }
 
+// ioutil.ReadDir
+func ReadDir(dirname string) []os.FileInfo {
+	entries, err := ioutil.ReadDir(dirname)
+	AbortIf(err)
+	return entries
+}
+
 // io.ReadFull
 func ReadFull(f *os.File, buf []byte) int {
 	n, err := io.ReadFull(f, buf)
@@ -127,6 +134,20 @@ func StatPath(name string) os.FileInfo {
 func Sync(f *os.File) {
 	err := f.Sync()
 	AbortIf(err)
+}
+
+// ioutil.TempDir
+func TempDir(dir, prefix string) string {
+	name, err := ioutil.TempDir(dir, prefix)
+	AbortIf(err)
+	return name
+}
+
+// ioutil.TempFile
+func TempFile(dir, prefix string) *os.File {
+	f, err := ioutil.TempFile(dir, prefix)
+	AbortIf(err)
+	return f
 }
 
 // os.File.Truncate
