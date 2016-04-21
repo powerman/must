@@ -124,6 +124,13 @@ func Rename(oldpath, newpath string) {
 	AbortIf(err)
 }
 
+// os.File, bytes.Buffer, …
+func Seek(f io.Seeker, offset int64, whence int) int64 {
+	n, err := f.Seek(offset, whence)
+	AbortIf(err)
+	return n
+}
+
 // os.File.Stat
 func Stat(f *os.File) os.FileInfo {
 	fi, err := f.Stat()
