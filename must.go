@@ -2,6 +2,7 @@
 package must
 
 import (
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"log"
@@ -53,6 +54,13 @@ type Encoder interface {
 func Encode(e Encoder, v interface{}) {
 	err := e.Encode(v)
 	AbortIf(err)
+}
+
+// json.Marshal
+func MarshalJSON(v interface{}) []byte {
+	data, err := json.Marshal(v)
+	AbortIf(err)
+	return data
 }
 
 // os.Open
@@ -159,6 +167,12 @@ func Truncate(f *os.File, size int64) {
 // os.Truncate
 func TruncatePath(name string, size int64) {
 	err := os.Truncate(name, size)
+	AbortIf(err)
+}
+
+// json.Unmarshal
+func UnmarshalJSON(data []byte, v interface{}) {
+	err := json.Unmarshal(data, v)
 	AbortIf(err)
 }
 
